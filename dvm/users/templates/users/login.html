@@ -1,0 +1,50 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carpool Login</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #333; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; margin-bottom: 10px; }
+        .btn-primary { background: #007bff; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-google { background: #db4437; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: 100%; box-sizing: border-box;}
+        .btn-google:hover { background: #c23321; }
+        .divider { margin: 20px 0; display: flex; align-items: center; text-align: center; color: #888; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+        a.text-link { color: #007bff; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <form action="{% provider_login_url 'google' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-google">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
+                Continue with Google
+            </button>
+        </form>
+
+        <p style="margin-top: 20px; font-size: 14px;">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="text-link">Register here</a>
+        </p>
+    </div>
+</body>
+</html>

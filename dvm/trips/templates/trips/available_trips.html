@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Rides</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; background: #e0e0e0; }
+    </style>
+</head>
+<body>
+    <h2>Available Carpool Trips</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Driver</th>
+                <th>Route</th>
+                <th>Seats Left</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for trip in trips %}
+            <tr>
+                <td>{{ trip.driver.username }}</td>
+                <td><strong>{{ trip.start_node }}</strong> &rarr; <strong>{{ trip.end_node }}</strong></td>
+                <td>{{ trip.max_passangers }}</td> <td><span class="status-tag">{{ trip.status }}</span></td>
+                <td>
+                    {% if trip.driver != request.user %}
+                        <form action="{% url 'accept-ride' trip.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+                                Request Join
+                            </button>
+                        </form>
+                    {% else %}
+                        <span style="color: #6c757d; font-style: italic;">Your Trip</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">No trips found matching your route.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

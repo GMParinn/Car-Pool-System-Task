@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request a Ride</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 400px; }
+        h2 { color: #1c1e21; margin-bottom: 20px; text-align: center; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #4b4b4b; }
+        select { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        .msg { padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 14px; text-align: center; }
+        .error { background: #ffe6e6; color: #d93025; }
+        .success { background: #e6ffec; color: #1e7e34; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Book a Ride</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label>Pickup Location</label>
+            <select name="pickup_node" required>
+                {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Dropoff Location</label>
+            <select name="dropoff_node" required>
+                {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Check Fare & Request</button>
+        </form>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" style="background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                Logout
+            </button>
+        </form>
+    </div>
+</body>
+</html>

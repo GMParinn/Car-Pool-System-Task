@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver - Create Trip</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #e9ecef; display: flex; justify-content: center; padding-top: 50px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 450px; }
+        h2 { color: #00796b; margin-bottom: 20px; text-align: center; }
+        label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600; color: #333; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { width: 100%; padding: 12px; background: #00796b; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        button:hover { background: #004d40; }
+        .msg { padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    
+    <div class="card">
+        <h2>Start a New Trip</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label>Starting Location (Pickup)</label>
+            <select name="start_node" required>
+                {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Final Destination</label>
+            <select name="end_node" required>
+                {% for node in nodes %}
+                    <option value="{{ node.id }}">{{ node.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Available Seats (Max Passengers)</label>
+            <input type="number" name="max_passengers" min="1" max="10" value="4" required>
+
+            <button type="submit">Create Trip & Map Route</button>
+        </form>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" style="background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                Logout
+            </button>
+        </form>
+    </div>
+</body>
+</html>
